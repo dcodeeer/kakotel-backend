@@ -82,6 +82,7 @@ CREATE TABLE estates.categories (
   id   SERIAL PRIMARY KEY,
   name TEXT NOT NULL
 );
+INSERT INTO estates.categories (name) VALUES ('Дом');
 
 CREATE TABLE estates.estates (
   id          SERIAL PRIMARY KEY,
@@ -131,6 +132,8 @@ CREATE TABLE estates.amenities (
   id   SERIAL PRIMARY KEY,
   name VARCHAR(535) NOT NULL
 );
+
+INSERT INTO estates.amenities (name) VALUES ('Wifi');
 
 CREATE TABLE estates.reviews (
   id         SERIAL PRIMARY KEY,

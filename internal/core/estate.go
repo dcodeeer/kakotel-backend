@@ -10,7 +10,7 @@ type Estate struct {
 	PriceWeek      int      `json:"price_week" db:"price_week"`
 	Area           int      `json:"area" db:"area"`
 	Rooms          int      `json:"rooms" db:"rooms"`
-	Showers        int      `json:"shower3s" db:"showers"`
+	Showers        int      `json:"showers" db:"showers"`
 	BabyRooms      int      `json:"baby_rooms" db:"baby_rooms"`
 	CategoryId     int      `json:"category_id" db:"category_id"`
 	CreatedAt      string   `json:"created_at" db:"created_at"`

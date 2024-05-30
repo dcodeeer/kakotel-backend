@@ -4,6 +4,7 @@ import (
 	"api/internal/application"
 	"api/internal/infrastructure"
 	"api/internal/transport/http"
+	"api/internal/transport/websocket"
 
 	"api/pkg/configuration"
 	"api/pkg/postgresql"
@@ -30,6 +31,12 @@ func main() {
 	useCase := application.New(repository)
 
 	httpServer := http.New(useCase)
+
+	//
+	ws := websocket.New()
+	go ws.Run()
+	httpServer.HandleWS("/ws", ws.GetServer())
+	//
 
 	go func() {
 		if err := httpServer.Run(cfg.HttpSocket); err != nil {

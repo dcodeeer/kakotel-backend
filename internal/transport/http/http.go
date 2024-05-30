@@ -24,9 +24,9 @@ func New(useCase *application.UseCase) *handler {
 	}
 }
 
-func (h *handler) HandleWS(path string, callback http.HandlerFunc) {
+func (h *handler) HandleWS(path string, callback http.Handler) {
 	h.router.GET(path, func(c echo.Context) error {
-		callback(c.Response(), c.Request())
+		callback.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
 }
