@@ -2,7 +2,6 @@ package chats
 
 import (
 	"api/internal/core"
-	"database/sql"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -32,13 +31,25 @@ func New(db *sqlx.DB) *chats {
 	return &chats{db: db}
 }
 
-func (r *chats) AddMessage(message *core.Message) error {
-	query := "INSERT INTO chats.messages (chat_id, sender_id, type_id, content) VALUES($1, $2, $3, $4)"
-	err := r.db.QueryRow(query, message.ChatId, message.SenderId, message.TypeId, message.Content).Scan()
-	if err != nil && err != sql.ErrNoRows {
-		return err
-	}
-	return nil
+func (r *chats) Add(user1, user2 int) (int, error) {
+	var chatId int
+	query := "INSERT INTO chats.chats (members) VALUES ($1) RETURNING id;"
+	err := r.db.QueryRow(query, [2]int{user1, user2}).Scan(&chatId)
+	return chatId, err
+}
+
+func (r *chats) AddMessage(message *core.Message) (*core.Message, error) {
+	var output core.Message
+	query := "INSERT INTO chats.messages (chat_id, sender_id, type_id, content) VALUES($1, $2, $3, $4) RETURNING *;"
+	err := r.db.QueryRowx(query, message.ChatId, message.SenderId, message.TypeId, message.Content).StructScan(&output)
+	return &output, err
+}
+
+func (r *chats) GetChatIdByMembers(user1, user2 int) (int, error) {
+	var chatId int
+	query := "SELECT id from chats.chats WHERE $1 = ANY(members) AND $2 = ANY(members);"
+	err := r.db.QueryRow(query, user1, user2).Scan(&chatId)
+	return chatId, err
 }
 
 func (r *chats) GetAll(userId int) (*[]core.Chat, error) {

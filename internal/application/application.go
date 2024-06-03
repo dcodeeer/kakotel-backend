@@ -49,10 +49,13 @@ type IEstates interface {
 }
 
 type IChats interface {
-	AddMessage(message *core.Message) error
+	Add(user1, user2 int) (int, error)
+	AddMessage(message *core.Message) (*core.Message, error)
 
 	GetAll(userId int) (*[]core.Chat, error)
 	GetMessages(userId, chatId int) (*[]core.Message, error)
+
+	GetChatIdByMembers(user1, user2 int) (int, error)
 }
 
 func New(repo *infrastructure.Repo) *UseCase {

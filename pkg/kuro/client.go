@@ -29,10 +29,20 @@ type Client struct {
 	server *Server
 	conn   *websocket.Conn
 	send   chan []byte
+
+	data map[string]any
+}
+
+func (c *Client) Get(key string) any {
+	return c.data[key]
 }
 
 func (c *Client) ID() string {
 	return c.id
+}
+
+func (c *Client) Close(code int, text string) error {
+	return c.conn.CloseHandler()(code, text)
 }
 
 func (c *Client) Emit(message []byte) {
@@ -96,7 +106,7 @@ func (c *Client) write() {
 }
 
 func serveWs(server *Server, w http.ResponseWriter, r *http.Request) {
-	err := server.beforeUpgrade(w, r)
+	data, err := server.beforeUpgrade(w, r)
 	if err != nil {
 		w.WriteHeader(400)
 		return
@@ -106,10 +116,15 @@ func serveWs(server *Server, w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	client := &Client{id: r.Header.Get("Sec-WebSocket-Key"), server: server, conn: conn, send: make(chan []byte, 256)}
-	client.server.register <- client
+	client := &Client{
+		id:     r.Header.Get("Sec-WebSocket-Key"),
+		server: server,
+		conn:   conn,
+		send:   make(chan []byte, 256),
 
-	log.Printf("socket %s connected", r.Header.Get("Sec-WebSocket-Key"))
+		data: data,
+	}
+	client.server.register <- client
 
 	go client.write()
 	go client.read()

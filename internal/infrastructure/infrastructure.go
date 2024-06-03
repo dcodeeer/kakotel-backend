@@ -16,12 +16,14 @@ type Repo struct {
 }
 
 type IChats interface {
-	AddMessage(message *core.Message) error
+	Add(user1, user2 int) (int, error)
+	AddMessage(message *core.Message) (*core.Message, error)
 
 	GetAll(userId int) (*[]core.Chat, error)
 	GetMessages(chatId int) (*[]core.Message, error)
 
 	IsChatMember(userId, chatId int) error
+	GetChatIdByMembers(user1, user2 int) (int, error)
 }
 
 type IUsers interface {

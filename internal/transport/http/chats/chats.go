@@ -17,6 +17,7 @@ func InitRoutes(api *echo.Group, middleware echo.MiddlewareFunc, useCase applica
 
 	router := api.Group("/chats", middleware)
 	router.GET("", h.getAll)
+	router.GET("/:friendId", h.getChatByMembers)
 	router.GET("/messages", h.getMessages)
 }
 
@@ -47,4 +48,21 @@ func (h *handler) getMessages(c echo.Context) error {
 	}
 
 	return c.JSON(200, messages)
+}
+
+func (h *handler) getChatByMembers(c echo.Context) error {
+	userId := c.Get("userId").(int)
+
+	friendId, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		return c.NoContent(400)
+	}
+
+	chatId, err := h.useCase.GetChatIdByMembers(userId, friendId)
+	if err != nil {
+		log.Println(err)
+		return c.NoContent(400)
+	}
+
+	return c.JSON(200, map[string]any{"chat_id": chatId})
 }

@@ -19,7 +19,7 @@ type Server struct {
 	onConnect     OnConnectFunc
 }
 
-type BeforeUpgradeFunc func(http.ResponseWriter, *http.Request) error
+type BeforeUpgradeFunc func(http.ResponseWriter, *http.Request) (map[string]any, error)
 type OnDisconnectFunc func(c *Client)
 type OnConnectFunc func(c *Client)
 
@@ -45,7 +45,6 @@ func (h *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) Join(roomName string, c *Client) {
-	log.Println("here")
 	s.roomManager.Join(roomName, c)
 }
 

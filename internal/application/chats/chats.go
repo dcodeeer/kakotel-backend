@@ -3,7 +3,6 @@ package chats
 import (
 	"api/internal/core"
 	"api/internal/infrastructure"
-	"errors"
 )
 
 type chats struct {
@@ -18,7 +17,14 @@ func New(repo infrastructure.IChats, usersRepo infrastructure.IUsers) *chats {
 	}
 }
 
-func (s *chats) AddMessage(message *core.Message) error {
+func (s *chats) Add(user1, user2 int) (int, error) {
+	return s.repo.Add(user1, user2)
+}
+
+func (s *chats) GetChatIdByMembers(user1, user2 int) (int, error) {
+	return s.repo.GetChatIdByMembers(user1, user2)
+}
+func (s *chats) AddMessage(message *core.Message) (*core.Message, error) {
 	return s.repo.AddMessage(message)
 }
 
@@ -27,12 +33,5 @@ func (s *chats) GetAll(userId int) (*[]core.Chat, error) {
 }
 
 func (s *chats) GetMessages(userId, chatId int) (*[]core.Message, error) {
-	if userId == chatId {
-		return nil, errors.New("userId == chatId")
-	}
-	if err := s.usersRepo.ExistsById(chatId); err != nil {
-		return nil, err
-	}
-
 	return s.repo.GetMessages(chatId)
 }

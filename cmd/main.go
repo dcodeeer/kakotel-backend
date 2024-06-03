@@ -33,7 +33,7 @@ func main() {
 	httpServer := http.New(useCase)
 
 	//
-	ws := websocket.New()
+	ws := websocket.New(useCase.Users, useCase.Chats)
 	go ws.Run()
 	httpServer.HandleWS("/ws", ws.GetServer())
 	//

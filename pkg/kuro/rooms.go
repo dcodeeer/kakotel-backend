@@ -1,7 +1,6 @@
 package kuro
 
 import (
-	"log"
 	"sync"
 )
 
@@ -20,8 +19,6 @@ func (r *roomManager) Join(room string, c *Client) {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
-	log.Println("join to room")
-
 	if _, ok := r.rooms[room]; !ok {
 		r.rooms[room] = make(map[string]*Client)
 	}
@@ -39,9 +36,6 @@ func (r *roomManager) Leave(room string, c *Client) {
 }
 
 func (r *roomManager) Emit(room, event string, payload []byte) {
-	for roomName, _ := range r.rooms {
-		log.Println(roomName)
-	}
 	if clients, ok := r.rooms[room]; ok {
 		for _, client := range clients {
 			var dto Event
