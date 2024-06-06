@@ -5,6 +5,11 @@ start:
 	go build -o ./bin/app ./cmd/main.go
 	./bin/app
 
+docker_build:
+	docker build -it kakotel-api .
+docker_run:
+	docker run -d --rm --network=host --restart=always -t -v /var/www/kakotel/static:/uploads -t kakotel-api
+
 database_up:
 	docker run --name dev-db --rm \
 	-e POSTGRES_USER=${DB_USER} \
