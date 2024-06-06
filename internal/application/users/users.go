@@ -4,6 +4,7 @@ import (
 	"api/internal/core"
 	"api/internal/infrastructure"
 	"errors"
+	"log"
 	"os"
 
 	"golang.org/x/crypto/bcrypt"
@@ -89,16 +90,19 @@ func (s *users) UpdateLastSeen(userId int) error {
 func (s *users) UpdatePhoto(userId int, bytes []byte) (string, error) {
 	filename, err := core.CreateFile(bytes)
 	if err != nil {
+		log.Println("error 1")
 		return "", err
 	}
 
 	user, err := s.repo.GetOneById(userId)
 	if err != nil {
+		log.Println("error 1")
 		return "", err
 	}
 
 	err = s.repo.UpdatePhoto(userId, filename)
 	if err != nil {
+		log.Println("error 1")
 		return "", err
 	}
 
