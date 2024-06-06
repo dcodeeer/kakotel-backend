@@ -5,6 +5,7 @@ import (
 	"api/internal/transport/http/chats"
 	"api/internal/transport/http/estates"
 	"api/internal/transport/http/users"
+	"api/internal/transport/websocket"
 	"net/http"
 	"time"
 
@@ -14,12 +15,14 @@ import (
 
 type handler struct {
 	useCase *application.UseCase
+	ws      *websocket.WebSocket
 	router  *echo.Echo
 }
 
-func New(useCase *application.UseCase) *handler {
+func New(useCase *application.UseCase, ws *websocket.WebSocket) *handler {
 	return &handler{
 		useCase: useCase,
+		ws:      ws,
 		router:  echo.New(),
 	}
 }
@@ -48,7 +51,7 @@ func (h *handler) getRouter() http.Handler {
 
 	basePath := h.router.Group("/api/v1")
 
-	users.InitRoutes(basePath, h.AuthenticateMiddleware, h.useCase.Users)
+	users.InitRoutes(basePath, h.AuthenticateMiddleware, h.useCase.Users, h.ws)
 	chats.InitRoutes(basePath, h.AuthenticateMiddleware, h.useCase.Chats)
 	estates.InitRoutes(basePath, h.AuthenticateMiddleware, h.useCase.Estates)
 

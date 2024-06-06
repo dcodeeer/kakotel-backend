@@ -89,6 +89,15 @@ func (r *users) Update(user *core.User) error {
 	return err
 }
 
+func (r *users) UpdateLastSeen(userId int) error {
+	query := "UPDATE users.users SET last_seen = CURRENT_TIMESTAMP WHERE id = $1;"
+	err := r.db.QueryRow(query, userId).Scan()
+	if err == sql.ErrNoRows {
+		return nil
+	}
+	return err
+}
+
 func (r *users) ChangePassword(userId int, password string) error {
 	query := "UPDATE users.users SET password = $1 WHERE id = $2"
 	return r.db.QueryRowx(query, password, userId).Err()

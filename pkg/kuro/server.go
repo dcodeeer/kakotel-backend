@@ -62,6 +62,10 @@ func (s *Server) OnConnect(callback OnConnectFunc) {
 	s.onConnect = callback
 }
 
+func (s *Server) RoomExists(room string) error {
+	return s.roomManager.RoomExists(room)
+}
+
 func (s *Server) OnDisconnect(callback OnDisconnectFunc) {
 	s.onDisconnect = callback
 }

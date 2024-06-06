@@ -1,6 +1,7 @@
 package kuro
 
 import (
+	"errors"
 	"sync"
 )
 
@@ -13,6 +14,17 @@ func newRoomManager() *roomManager {
 	return &roomManager{
 		rooms: make(map[string]map[string]*Client),
 	}
+}
+
+func (r *roomManager) RoomExists(room string) error {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
+	if _, ok := r.rooms[room]; !ok {
+		return errors.New("room not found")
+	}
+
+	return nil
 }
 
 func (r *roomManager) Join(room string, c *Client) {
@@ -32,6 +44,10 @@ func (r *roomManager) Leave(room string, c *Client) {
 
 	if clients, ok := r.rooms[room]; ok {
 		delete(clients, c.ID())
+
+		if len(clients) == 0 {
+			delete(r.rooms, room)
+		}
 	}
 }
 

@@ -9,6 +9,7 @@ type User struct {
 	LastName    *string `json:"lastname" db:"lastname"`
 	Patronymic  *string `json:"patronymic" db:"patronymic"`
 	DateOfBirth *string `json:"date_of_birth" db:"date_of_birth"`
+	LastSeen    string  `json:"last_seen" db:"last_seen"`
 	Photo       *string `json:"photo" db:"photo"`
 	CreatedAt   string  `json:"created_at" db:"created_at"`
 }

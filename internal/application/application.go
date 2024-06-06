@@ -27,6 +27,7 @@ type IUsers interface {
 
 	Update(user *core.User) error
 	UpdatePhoto(userId int, bytes []byte) (image string, err error)
+	UpdateLastSeen(userId int) error
 	ChangePassword(userId int, oldPassword, newPassword string) error
 }
 

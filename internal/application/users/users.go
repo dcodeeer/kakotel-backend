@@ -65,6 +65,7 @@ func (s *users) GetOneInfo(userId int) (map[string]interface{}, error) {
 	output["firstname"] = user.FirstName
 	output["lastname"] = user.LastName
 	output["photo"] = user.Photo
+	output["last_seen"] = user.LastSeen
 
 	return output, nil
 }
@@ -79,6 +80,10 @@ func (s *users) GetByToken(token string) (*core.User, error) {
 
 func (s *users) Update(user *core.User) error {
 	return s.repo.Update(user)
+}
+
+func (s *users) UpdateLastSeen(userId int) error {
+	return s.repo.UpdateLastSeen(userId)
 }
 
 func (s *users) UpdatePhoto(userId int, bytes []byte) (string, error) {

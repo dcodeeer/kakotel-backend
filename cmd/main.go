@@ -30,10 +30,10 @@ func main() {
 	repository := infrastructure.New(db)
 	useCase := application.New(repository)
 
-	httpServer := http.New(useCase)
+	ws := websocket.New(useCase.Users, useCase.Chats)
+	httpServer := http.New(useCase, ws)
 
 	//
-	ws := websocket.New(useCase.Users, useCase.Chats)
 	go ws.Run()
 	httpServer.HandleWS("/ws", ws.GetServer())
 	//

@@ -2,6 +2,7 @@ package users
 
 import (
 	"api/internal/application"
+	"api/internal/transport/websocket"
 	"io"
 	"log"
 	"strconv"
@@ -11,10 +12,11 @@ import (
 
 type handler struct {
 	useCase application.IUsers
+	ws      *websocket.WebSocket
 }
 
-func InitRoutes(api *echo.Group, middleware echo.MiddlewareFunc, useCase application.IUsers) {
-	h := &handler{useCase: useCase}
+func InitRoutes(api *echo.Group, middleware echo.MiddlewareFunc, useCase application.IUsers, ws *websocket.WebSocket) {
+	h := &handler{useCase: useCase, ws: ws}
 
 	router := api.Group("/users")
 	router.GET("", h.getOne)
@@ -84,6 +86,8 @@ func (h *handler) getOne(c echo.Context) error {
 	if err != nil {
 		return c.NoContent(400)
 	}
+
+	user["last_seen"] = h.ws.IsUserOnline(userId)
 
 	return c.JSON(200, user)
 }

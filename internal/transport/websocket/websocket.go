@@ -3,8 +3,11 @@ package websocket
 import (
 	"api/internal/application"
 	"api/pkg/kuro"
+	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type WebSocket struct {
@@ -33,6 +36,7 @@ func (w *WebSocket) Run() {
 	w.server.OnDisconnect(w.OnDisconnect)
 
 	w.server.OnEvent("message", w.handleMessage)
+	w.server.OnEvent("online", w.handleOnlineListen)
 
 	w.server.Run()
 }
@@ -51,13 +55,27 @@ func (ws *WebSocket) SetBeforeUpgrade(w http.ResponseWriter, r *http.Request) (m
 	return map[string]any{"userId": user.ID}, nil
 }
 
+type handleOnlineDto struct {
+	Online   bool   `json:"online"`
+	LastSeen string `json:"last_seen"`
+}
+
 func (w *WebSocket) OnConnect(socket *kuro.Client) {
 	userId := socket.Get("userId").(int)
 
 	w.server.Join(userRoomPrefix+strconv.Itoa(userId), socket)
+
+	bytes, _ := json.Marshal(handleOnlineDto{Online: true, LastSeen: ""})
+	w.server.Emit(userRoomPrefix+strconv.Itoa(userId), userRoomPrefix+strconv.Itoa(userId), bytes)
 }
 
 func (w *WebSocket) OnDisconnect(socket *kuro.Client) {
 	userId := socket.Get("userId").(int)
+	if err := w.users.UpdateLastSeen(userId); err != nil {
+		log.Println(err)
+	}
 	w.server.Leave(userRoomPrefix+strconv.Itoa(userId), socket)
+
+	bytes, _ := json.Marshal(handleOnlineDto{Online: false, LastSeen: time.Now().String()})
+	w.server.Emit(userRoomPrefix+strconv.Itoa(userId), userRoomPrefix+strconv.Itoa(userId), bytes)
 }
