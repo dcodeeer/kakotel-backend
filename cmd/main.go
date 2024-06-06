@@ -39,6 +39,7 @@ func main() {
 	//
 
 	go func() {
+		log.Println("http server has been started")
 		if err := httpServer.Run(cfg.HttpSocket); err != nil {
 			log.Fatal(err)
 		}
