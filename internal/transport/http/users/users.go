@@ -120,6 +120,7 @@ func (h *handler) uploadPhoto(c echo.Context) error {
 
 	path, err := h.useCase.UpdatePhoto(userId, bytes)
 	if err != nil {
+		log.Println(err)
 		return c.NoContent(400)
 	}
 
