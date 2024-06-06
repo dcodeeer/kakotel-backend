@@ -6,7 +6,7 @@ start:
 	./bin/app
 
 docker_build:
-	docker build -it kakotel-api .
+	docker build -t kakotel-api .
 docker_run:
 	docker run -d --rm --network=host --restart=always -t -v /var/www/kakotel/static:/uploads -t kakotel-api
 
