@@ -43,7 +43,7 @@ func CreateFile(bytes []byte) (string, error) {
 		return "", ErrUnsupportedImageFormat
 	}
 
-	file, err := os.Create("/uploads/" + filename)
+	file, err := os.Create("/app/uploads/" + filename)
 	if err != nil {
 		return "", err
 	}

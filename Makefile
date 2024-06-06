@@ -8,7 +8,7 @@ start:
 docker_build:
 	docker build -t kakotel-api .
 docker_run:
-	docker run -d --network=host --restart=always -t -v /var/www/kakotel/static:/uploads --env-file .env  -t kakotel-api
+	docker run -d --network=host --restart=always -t -v /var/www/kakotel/static:/app/uploads --env-file .env  -t kakotel-api
 
 database_up:
 	docker run --name dev-db --rm \
