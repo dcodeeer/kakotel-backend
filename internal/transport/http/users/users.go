@@ -35,14 +35,17 @@ func InitRoutes(api *echo.Group, middleware echo.MiddlewareFunc, useCase applica
 func (h *handler) signUp(c echo.Context) error {
 	var dto signUpDTO
 	if err := c.Bind(&dto); err != nil {
+		log.Println("bind")
 		return c.String(400, "Bad Request")
 	}
 	if err := dto.Validate(); err != nil {
+		log.Println("validate")
 		return c.String(400, "Bad Request")
 	}
 
-	token, err := h.useCase.SignUp(dto.Email, dto.Password)
+	token, err := h.useCase.SignUp(dto.Fullname, dto.Email, dto.Password)
 	if err != nil {
+		log.Println(err)
 		return c.String(400, "Bad Request")
 	}
 
@@ -95,6 +98,7 @@ func (h *handler) getOne(c echo.Context) error {
 func (h *handler) update(c echo.Context) error {
 	var dto updateDTO
 	if err := c.Bind(&dto); err != nil {
+		log.Println(err)
 		return c.String(400, "Bad Request")
 	}
 
@@ -104,6 +108,7 @@ func (h *handler) update(c echo.Context) error {
 	user.ID = userId
 
 	if err := h.useCase.Update(user); err != nil {
+		log.Println(err)
 		return c.NoContent(400)
 	}
 

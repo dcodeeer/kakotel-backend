@@ -57,8 +57,7 @@ func (r *chats) GetAll(userId int) (*[]core.Chat, error) {
 	query := `SELECT chats.id as chat_id,
 			users.id as friend_id,
 			users.photo as friend_photo,
-			users.firstname as friend_firstname,
-			users.lastname as friend_lastname,
+			users.fullname as friend_fullname,
 			(SELECT sender_id FROM chats.messages WHERE chat_id = chats.id ORDER BY id DESC LIMIT 1) as last_message_sender,
 			(SELECT type_id FROM chats.messages WHERE chat_id = chats.id ORDER BY id DESC LIMIT 1) as last_message_type,
 			(SELECT content FROM chats.messages WHERE chat_id = chats.id ORDER BY id DESC LIMIT 1) as last_message_content

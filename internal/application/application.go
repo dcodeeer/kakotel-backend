@@ -15,7 +15,7 @@ type UseCase struct {
 }
 
 type IUsers interface {
-	SignUp(email, password string) (string, error)
+	SignUp(fullname, email, password string) (string, error)
 	SignIn(email, password string) (string, error)
 
 	SendRecoveryKey(email string) error

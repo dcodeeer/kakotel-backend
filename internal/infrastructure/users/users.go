@@ -23,8 +23,8 @@ func New(db *sqlx.DB) *users {
 
 func (r *users) Add(user *core.User) (int, error) {
 	var id int
-	sql := "INSERT INTO users.users (email, password) VALUES ($1, $2) RETURNING id;"
-	err := r.db.QueryRowx(sql, user.Email, user.Password).Scan(&id)
+	sql := "INSERT INTO users.users (fullname, email, password) VALUES ($1, $2, $3) RETURNING id;"
+	err := r.db.QueryRowx(sql, user.Fullname, user.Email, user.Password).Scan(&id)
 	return id, err
 }
 
@@ -81,8 +81,8 @@ func (r *users) CreateToken(userId int) (string, error) {
 }
 
 func (r *users) Update(user *core.User) error {
-	query := "UPDATE users.users SET firstname = $1, lastname = $2, patronymic = $3 WHERE id = $4"
-	err := r.db.QueryRow(query, user.FirstName, user.LastName, user.Patronymic, user.ID).Scan()
+	query := "UPDATE users.users SET fullname = $1, description = $2 WHERE id = $3"
+	err := r.db.QueryRow(query, user.Fullname, user.Description, user.ID).Scan()
 	if err == sql.ErrNoRows {
 		return nil
 	}

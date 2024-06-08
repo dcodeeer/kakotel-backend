@@ -4,8 +4,7 @@ type Chat struct {
 	ID                 int     `json:"id" db:"chat_id"`
 	FriendId           *int    `json:"friend_id" db:"friend_id"`
 	FriendPhoto        *string `json:"friend_photo" db:"friend_photo"`
-	FriendFirstName    *string `json:"friend_firstname" db:"friend_firstname"`
-	FriendLastName     *string `json:"friend_lastname" db:"friend_lastname"`
+	FriendFullname     *string `json:"friend_fullname" db:"friend_fullname"`
 	LastMessageSender  *int    `json:"last_message_sender" db:"last_message_sender"`
 	LastMessageType    *int    `json:"last_message_type" db:"last_message_type"`
 	LastMessageContent *string `json:"last_message_content" db:"last_message_content"`

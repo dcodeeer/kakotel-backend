@@ -6,6 +6,7 @@ import (
 )
 
 type signUpDTO struct {
+	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -18,15 +19,15 @@ func (dto *signUpDTO) Validate() error {
 }
 
 type updateDTO struct {
-	FirstName   string `json:"firstname"`
-	LastName    string `json:"lastname"`
+	Fullname    string `json:"fullname"`
+	Description string `json:"description"`
 	DateOfBirth string `json:"date_of_birth"`
 }
 
 func (dto *updateDTO) ToUser() *core.User {
 	return &core.User{
-		FirstName:   &dto.FirstName,
-		LastName:    &dto.LastName,
+		Fullname:    &dto.Fullname,
+		Description: &dto.Description,
 		DateOfBirth: &dto.DateOfBirth,
 	}
 }

@@ -18,7 +18,7 @@ func New(repo infrastructure.IUsers) *users {
 	return &users{repo: repo}
 }
 
-func (s *users) SignUp(email, password string) (string, error) {
+func (s *users) SignUp(fullname, email, password string) (string, error) {
 	err := s.repo.EmailExists(email)
 	if err != nil {
 		return "", err
@@ -29,6 +29,7 @@ func (s *users) SignUp(email, password string) (string, error) {
 		return "", err
 	}
 	user := &core.User{
+		Fullname: &fullname,
 		Email:    email,
 		Password: string(hashedPassword),
 	}
@@ -63,8 +64,8 @@ func (s *users) GetOneInfo(userId int) (map[string]interface{}, error) {
 	}
 
 	output["id"] = user.ID
-	output["firstname"] = user.FirstName
-	output["lastname"] = user.LastName
+	output["fullname"] = user.Fullname
+	output["description"] = user.Description
 	output["photo"] = user.Photo
 	output["last_seen"] = user.LastSeen
 
